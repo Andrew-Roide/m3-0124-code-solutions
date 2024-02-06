@@ -5,7 +5,7 @@
 Answer the following questions in the provided markdown file before turning in this exercise:
 
 - What is a computer process?
-  rocess is the instance of a computer program that is being executed by one or many threads.
+  process is the instance of a computer program that is being executed by one or many threads.
 
 - Roughly how many computer processes are running on your computer operating system (Task Manager or Activity Monitor)?
   200
