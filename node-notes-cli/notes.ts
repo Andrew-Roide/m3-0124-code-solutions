@@ -1,6 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { writeFile } from 'node:fs/promises';
-
+import { readFile, writeFile } from 'node:fs/promises';
 
 type Data = {
   nextId: number;
@@ -9,16 +7,12 @@ type Data = {
 
 const dataFilePath = 'data.json';
 
-async function readData() {
-  try {
-    const rawData = await readFile(dataFilePath, 'utf8');
-    return JSON.parse(rawData);
-  } catch (error) {
-    throw new Error(`Error reading data: ${error}`);
-  }
+async function readData(): Promise<Data> {
+  const rawData = await readFile(dataFilePath, 'utf8');
+  return JSON.parse(rawData) as Data;
 }
 
-async function writeData(data: Data) {
+async function writeData(data: Data): Promise<void> {
   try {
     await writeFile('data.json', JSON.stringify(data, null, 2));
   } catch (error) {
@@ -26,7 +20,7 @@ async function writeData(data: Data) {
   }
 }
 
-async function readNotes() {
+async function readNotes(): Promise<void> {
   try {
     const data = await readData();
     const notes = data.notes;
@@ -39,7 +33,7 @@ async function readNotes() {
   }
 }
 
-async function addNote(content: string) {
+async function addNote(content: string): Promise<void> {
   try {
     const data = await readData();
     const newId = data.nextId.toString();
@@ -55,7 +49,7 @@ async function addNote(content: string) {
   }
 }
 
-async function deleteNote(id: string) {
+async function deleteNote(id: string): Promise<void> {
   try {
     const data = await readData();
 
@@ -71,7 +65,7 @@ async function deleteNote(id: string) {
   }
 }
 
-async function updateNote(id: string, content: string) {
+async function updateNote(id: string, content: string): Promise<void> {
   try {
     const data = await readData();
 
@@ -87,14 +81,14 @@ async function updateNote(id: string, content: string) {
   }
 }
 
-const action = process.argv[2];
+const [, , action, arg1, arg2] = process.argv;
 
 if (action === 'read') {
   await readNotes();
 } else if (action === 'create') {
-  await addNote(process.argv[3]);
+  await addNote(arg1);
 } else if (action === 'update') {
-  await updateNote(process.argv[3], process.argv[4]);
+  await updateNote(arg1, arg2);
 } else if (action === 'delete') {
-  await deleteNote(process.argv[3]);
+  await deleteNote(arg1);
 }
